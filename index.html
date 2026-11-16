@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="GeoSense Wiki — GIS & Remote Sensing Quick Reference" />
+  <title>GeoSense Wiki | GIS & Remote Sensing</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0b1829;
+      --panel: rgba(14, 30, 50, 0.82);
+      --panel-strong: #10233a;
+      --border: rgba(89, 205, 255, 0.18);
+      --cyan: #59d9ff;
+      --blue: #4f8cff;
+      --text: #eaf7ff;
+      --muted: #91a8bc;
+      --success: #71f0c3;
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+      --radius: 18px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(79, 140, 255, 0.12), transparent 30%),
+        radial-gradient(circle at 85% 25%, rgba(89, 217, 255, 0.09), transparent 28%),
+        var(--bg);
+      font-family: Inter, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.7;
+    }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 17, 31, 0.78);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(89, 217, 255, 0.6);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: var(--cyan);
+      box-shadow: 0 0 22px rgba(89, 217, 255, 0.15);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 7px 11px;
+      border-radius: 10px;
+      transition: .2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(89, 217, 255, 0.08);
+    }
+
+    .hero {
+      padding: 90px 0 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 7vw, 5.6rem);
+      line-height: .98;
+      margin: 14px 0 20px;
+      letter-spacing: -.04em;
+    }
+
+    .hero h1 span {
+      color: var(--cyan);
+      text-shadow: 0 0 32px rgba(89, 217, 255, .18);
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      background: rgba(14, 30, 50, .55);
+      color: #cce9f7;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: .84rem;
+    }
+
+    .search-panel {
+      margin-top: 34px;
+      display: flex;
+      gap: 10px;
+      max-width: 760px;
+    }
+
+    .search-panel input {
+      flex: 1;
+      min-width: 0;
+      color: var(--text);
+      background: rgba(9, 24, 40, .9);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px 17px;
+      outline: none;
+    }
+
+    .search-panel input:focus {
+      border-color: rgba(89, 217, 255, .55);
+      box-shadow: 0 0 0 4px rgba(89, 217, 255, .06);
+    }
+
+    .search-panel button {
+      border: 0;
+      border-radius: 14px;
+      padding: 0 20px;
+      color: #03111b;
+      background: var(--cyan);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    main { padding-bottom: 80px; }
+
+    .section {
+      padding: 54px 0 10px;
+      scroll-margin-top: 85px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      margin: 4px 0 0;
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .topic-card {
+      position: relative;
+      text-align: left;
+      width: 100%;
+      min-height: 168px;
+      color: var(--text);
+      background: linear-gradient(145deg, rgba(17, 38, 62, .88), rgba(8, 23, 39, .88));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .topic-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(89, 217, 255, .45);
+      box-shadow: var(--shadow);
+    }
+
+    .topic-card .tag {
+      color: var(--cyan);
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-weight: 800;
+    }
+
+    .topic-card h3 {
+      margin: 8px 0 4px;
+      font-size: 1.25rem;
+    }
+
+    .topic-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .detail {
+      display: none;
+      margin-top: 42px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(8, 23, 39, .92);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      scroll-margin-top: 90px;
+    }
+
+    .detail.active { display: block; }
+
+    .detail-header {
+      padding: 28px 30px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(110deg, rgba(79, 140, 255, .10), rgba(89, 217, 255, .04));
+    }
+
+    .detail-header .tag {
+      color: var(--cyan);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .detail-header h2 {
+      margin: 7px 0 3px;
+      font-size: 2rem;
+    }
+
+    .detail-header .english {
+      color: var(--muted);
+    }
+
+    .detail-body {
+      padding: 28px 30px 32px;
+    }
+
+    .summary {
+      padding: 17px 18px;
+      margin-bottom: 28px;
+      border-left: 3px solid var(--cyan);
+      background: rgba(89, 217, 255, .055);
+      color: #d9f4ff;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px 34px;
+    }
+
+    .detail-section h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #dff7ff;
+    }
+
+    .detail-section p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .detail-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .formula {
+      padding: 14px;
+      margin-top: 6px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, .15);
+      font-family: "Times New Roman", serif;
+      font-size: 1.08rem;
+      color: #e9fbff;
+    }
+
+    .related {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .related button {
+      border: 1px solid var(--border);
+      background: rgba(89, 217, 255, .05);
+      color: var(--cyan);
+      border-radius: 999px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    .close-detail {
+      margin-top: 28px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 10px;
+      padding: 8px 13px;
+      cursor: pointer;
+    }
+
+    .no-results {
+      display: none;
+      padding: 18px;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      margin-top: 14px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 0 45px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    footer strong { color: var(--text); }
+
+    @media (max-width: 860px) {
+      .nav { align-items: flex-start; padding: 13px 0; flex-direction: column; }
+      .topic-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .container { width: min(calc(100% - 24px), var(--max)); }
+      .hero { padding-top: 60px; }
+      .topic-grid { grid-template-columns: 1fr; }
+      .search-panel { flex-direction: column; }
+      .search-panel button { padding: 13px; }
+      .detail-header, .detail-body { padding: 22px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#">
+        <span class="brand-mark">G</span>
+        <span>GeoSense Wiki</span>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#satellites">Satellites</a>
+        <a href="#products">Products</a>
+        <a href="#concepts">Concepts</a>
+        <a href="#gis-tools">GIS Tools</a>
+      </nav>
+    </div>
+  </header>
+
+  <header class="hero">
+    <div class="container">
+      <div class="eyebrow">GIS & Remote Sensing Quick Reference</div>
+      <h1>Geo<span>Sense</span> Wiki</h1>
+      <p class="hero-copy">
+        一個以 GIS / Remote Sensing 為主題的科技感快速查詢型 Wiki。
+        從衛星、資料產品到遙測指標與 GIS 工具，快速找到你需要的核心資訊。
+      </p>
+
+      <div class="hero-meta">
+        <span class="pill">10 Topics</span>
+        <span class="pill">Single Page</span>
+        <span class="pill">中文 + English Terms</span>
+        <span class="pill">Quick Reference</span>
+      </div>
+
+      <div class="search-panel" role="search">
+        <input id="searchInput" type="search" placeholder="搜尋主題，例如 Landsat、NDVI、QGIS..." aria-label="搜尋主題" />
+        <button id="searchButton" type="button">Search</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section" id="satellites">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Satellites</h2>
+          <p class="section-subtitle">常見地球觀測衛星與任務</p>
+        </div>
+      </div>
+      <div class="topic-grid">
+        <button class="topic-card" data-topic="landsat">
+          <span class="tag">Satellite</span>
+          <h3>Landsat</h3>
+          <p>長期地球表面觀測，適合土地、植生、溫度與火災分析。</p>
+        </button>
+        <button class="topic-card" data-topic="sentinel-2">
+          <span class="tag">Satellite</span>
+          <h3>Sentinel-2</h3>
+          <p>高空間解析度多光譜觀測，常用於土地覆蓋與植生分析。</p>
+        </button>
+        <button class="topic-card" data-topic="modis">
+          <span class="tag">Satellite</span>
+          <h3>MODIS</h3>
+          <p>大範圍、高時間頻率的全球環境觀測。</p>
+        </button>
+      </div>
+    </section>
+
+    <section class="section" id="products">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Products</h2>
+          <p class="section-subtitle">常見衛星資料產品</p>
+        </div>
+      </div>
+      <div class="topic-grid">
+        <button class="topic-card" data-topic="mcd64a1">
+          <span class="tag">Product</span>
+          <h3>MCD64A1 Burned Area</h3>
+          <p>MODIS 全球 Burned Area 與 Burn Date 產品。</p>
+        </button>
+        <button class="topic-card" data-topic="sentinel-2-l2a">
+          <span class="tag">Product</span>
+          <h3>Sentinel-2 L2A</h3>
+          <p>大氣校正後的 Surface Reflectance 產品。</p>
+        </button>
+        <button class="topic-card" data-topic="landsat-level-2">
+          <span class="tag">Product</span>
+          <h3>Landsat Level-2</h3>
+          <p>包含 Surface Reflectance 與 Surface Temperature 的科學產品。</p>
+        </button>
+      </div>
+    </section>
+
+    <section class="section" id="concepts">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Concepts</h2>
+          <p class="section-subtitle">常見遙測指標與分析概念</p>
+        </div>
+      </div>
+      <div class="topic-grid">
+        <button class="topic-card" data-topic="ndvi">
+          <span class="tag">Concept</span>
+          <h3>NDVI</h3>
+          <p>利用 Red 與 NIR 描述植生狀況的常見指標。</p>
+        </button>
+        <button class="topic-card" data-topic="ndwi">
+          <span class="tag">Concept</span>
+          <h3>NDWI</h3>
+          <p>利用光譜差異強調水體或水分特徵。</p>
+        </button>
+        <button class="topic-card" data-topic="lst">
+          <span class="tag">Concept</span>
+          <h3>LST</h3>
+          <p>利用熱紅外資訊取得的 Land Surface Temperature。</p>
+        </button>
+      </div>
+    </section>
+
+    <section class="section" id="gis-tools">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">GIS Tools</h2>
+          <p class="section-subtitle">GIS 與 Remote Sensing 常用工具</p>
+        </div>
+      </div>
+      <div class="topic-grid">
+        <button class="topic-card" data-topic="qgis">
+          <span class="tag">GIS Tool</span>
+          <h3>QGIS</h3>
+          <p>開源 Desktop GIS，支援空間分析與 Raster / Vector 處理。</p>
+        </button>
+      </div>
+    </section>
+
+    <div id="noResults" class="no-results">
+      找不到符合的主題。請嘗試輸入 Landsat、Sentinel-2、MODIS、NDVI、NDWI、LST 或 QGIS。
+    </div>
+
+    <article id="detail" class="detail" aria-live="polite">
+      <div class="detail-header">
+        <div id="detailCategory" class="tag"></div>
+        <h2 id="detailTitle"></h2>
+        <div id="detailEnglish" class="english"></div>
+      </div>
+      <div class="detail-body">
+        <div id="detailSummary" class="summary"></div>
+        <div id="detailGrid" class="detail-grid"></div>
+        <button id="closeDetail" class="close-detail" type="button">Close Detail</button>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="container">
+      <strong>GeoSense Wiki</strong> · GIS & Remote Sensing Quick Reference
+      <br />
+      Built as a small AI-agent project with a reusable <code>AGENTS.md</code>.
+    </div>
+  </footer>
+
+  <script>
+    const topics = {
+      "landsat": {
+        category: "Satellite",
+        title: "Landsat",
+        english: "Landsat Missions",
+        summary: "Landsat 是長期進行地球表面觀測的重要衛星計畫，廣泛用於土地覆蓋、植生、地表溫度、森林、農業與火災等分析。",
+        sections: [
+          ["Introduction", "Landsat 是由 NASA 與 USGS 長期合作的地球觀測衛星計畫。其資料具有長時間序列特色，適合進行地表環境變化與土地覆蓋變遷分析。"],
+          ["Key Features", ["長期且連續的地球表面觀測資料", "Landsat 8 / 9 使用 OLI / OLI-2 與 TIRS / TIRS-2", "包含可見光、近紅外、短波紅外與熱紅外波段"]],
+          ["Spatial Resolution", "Multispectral：30 m；Panchromatic：15 m；Thermal：100 m，產品可重新取樣至 30 m。"],
+          ["Temporal Resolution", "Landsat 8 單星重訪週期為 16 天；Landsat 8 與 9 搭配時具有 8 天錯位。"],
+          ["Main Applications", ["Land Cover / Land Use", "Vegetation Monitoring", "NDVI Analysis", "Land Surface Temperature", "Wildfire Analysis"]],
+          ["Related Topics", ["Landsat Level-2", "NDVI", "LST", "QGIS"]]
+        ]
+      },
+      "sentinel-2": {
+        category: "Satellite",
+        title: "Sentinel-2",
+        english: "Sentinel-2 Mission",
+        summary: "Sentinel-2 是 Copernicus Earth Observation Programme 的光學地球觀測任務，使用 MultiSpectral Instrument (MSI) 取得高空間解析度多光譜影像。",
+        sections: [
+          ["Introduction", "Sentinel-2A 與 Sentinel-2B 搭載 MultiSpectral Instrument (MSI)，具有 13 個光譜波段。"],
+          ["Key Features", ["13 個光譜波段", "10 m、20 m、60 m 三種空間解析度", "涵蓋 Visible、NIR、Red Edge 與 SWIR"]],
+          ["Spatial Resolution", "10 m、20 m、60 m，不同波段具有不同解析度。"],
+          ["Temporal Resolution", "單一衛星約 10 天重訪；Sentinel-2A / 2B 組合約 5 天。"],
+          ["Main Applications", ["Land Cover Mapping", "Vegetation Monitoring", "NDVI", "NDWI", "Agricultural Monitoring", "Water Monitoring"]],
+          ["Related Topics", ["Sentinel-2 L2A", "NDVI", "NDWI", "QGIS"]]
+        ]
+      },
+      "modis": {
+        category: "Satellite",
+        title: "MODIS",
+        english: "Moderate Resolution Imaging Spectroradiometer",
+        summary: "MODIS 是搭載於 NASA Terra 與 Aqua 衛星上的中解析度成像光譜儀，適合全球尺度與高時間頻率的地表、植生、大氣與火災監測。",
+        sections: [
+          ["Introduction", "MODIS 涵蓋約 0.4 至 14.4 μm 的光譜範圍，具有 36 個光譜波段。"],
+          ["Key Features", ["36 個光譜波段", "大範圍掃描幅寬", "250 m、500 m、1000 m 三種空間解析度", "約每 1～2 天取得全球覆蓋資料"]],
+          ["Spatial Resolution", "Bands 1–2：250 m；Bands 3–7：500 m；Bands 8–36：1000 m。"],
+          ["Temporal Resolution", "利用約 2,330 km 的掃描幅寬，可約每 1～2 天取得全球覆蓋。"],
+          ["Main Applications", ["Vegetation Monitoring", "Fire Monitoring", "Burned Area Mapping", "Aerosol Monitoring", "Land Surface Temperature"]],
+          ["Related Topics", ["MCD64A1 Burned Area", "NDVI", "LST"]]
+        ]
+      },
+      "mcd64a1": {
+        category: "Product",
+        title: "MCD64A1 Burned Area",
+        english: "MODIS Burned Area Product",
+        summary: "MCD64A1 是 MODIS 的全球 Burned Area 資料產品，用於判定地表燒毀位置與日期，主要以 500 m 網格記錄 Burned Area 與 Burn Date。",
+        sections: [
+          ["Product Type", "Burned Area Product"],
+          ["Data Source", "MODIS 影像與 Active Fire 資訊。"],
+          ["Main Data Content", ["Burned Area", "Burn Date", "Quality / Diagnostic Information"]],
+          ["Spatial Resolution", "主要 Burned Area mapping 使用 500 m 網格；演算法使用 1 km MODIS Active Fire 資訊輔助判定。"],
+          ["Main Uses", ["Burned Area Mapping", "Wildfire Analysis", "Fire Impact Assessment", "Post-fire Environmental Analysis"]],
+          ["Related Topics", ["MODIS", "NDVI", "QGIS"]]
+        ]
+      },
+      "sentinel-2-l2a": {
+        category: "Product",
+        title: "Sentinel-2 L2A",
+        english: "Sentinel-2 Level-2A Surface Reflectance Product",
+        summary: "Sentinel-2 L2A 是經過大氣校正的 Surface Reflectance 產品，由 Level-1C 資料產生，也提供 AOT、Water Vapour 與 Scene Classification 等附加資訊。",
+        sections: [
+          ["Product Type", "Surface Reflectance Product"],
+          ["Data Source", "Sentinel-2 MSI Level-1C"],
+          ["Main Data Content", ["Surface Reflectance", "Aerosol Optical Thickness (AOT)", "Water Vapour (WV)", "Scene Classification Layer (SCL)"]],
+          ["Spatial Resolution", "主要提供 10 m、20 m、60 m，不同資料層具有不同解析度。"],
+          ["Main Uses", ["Vegetation Analysis", "NDVI", "NDWI", "Land Cover Mapping", "Agricultural Monitoring", "Water Monitoring"]],
+          ["Related Topics", ["Sentinel-2", "NDVI", "NDWI", "QGIS"]]
+        ]
+      },
+      "landsat-level-2": {
+        category: "Product",
+        title: "Landsat Level-2",
+        english: "Landsat Collection 2 Level-2 Science Products",
+        summary: "Landsat Collection 2 Level-2 是經過標準處理的 Landsat 科學資料產品，主要包含 Surface Reflectance 與 Surface Temperature。",
+        sections: [
+          ["Product Type", "Level-2 Science Product"],
+          ["Data Source", "Landsat 4–9"],
+          ["Main Data Content", ["Surface Reflectance", "Surface Temperature"]],
+          ["Spatial Resolution", "Surface Reflectance 主要為 30 m；Surface Temperature 由熱紅外資料產生。"],
+          ["Main Uses", ["Land Cover Analysis", "Vegetation Monitoring", "Surface Temperature Analysis", "Agricultural Monitoring", "Wildfire Analysis"]],
+          ["Common Analysis", ["NDVI", "NDWI", "LST", "Land Cover Classification", "Change Detection"]],
+          ["Related Topics", ["Landsat", "NDVI", "NDWI", "LST", "QGIS"]]
+        ]
+      },
+      "ndvi": {
+        category: "Concept",
+        title: "NDVI",
+        english: "Normalized Difference Vegetation Index",
+        summary: "NDVI 是常見的植生指標，利用 Red 與 Near Infrared (NIR) 波段的反射特性差異描述植生狀況。",
+        sections: [
+          ["Definition", "NDVI 利用多光譜遙測資料估計植生狀況。植物葉綠素吸收紅光，而健康植被通常對近紅外光具有較高反射率。"],
+          ["Formula", "NDVI = (ρNIR − ρRed) / (ρNIR + ρRed)", "formula"],
+          ["Variables", ["ρNIR — Near Infrared reflectance", "ρRed — Red reflectance"]],
+          ["Interpretation", ["較高的正值：通常代表較茂密或較健康的植生", "接近 0：可能代表裸地、岩石或建成區", "負值：常見於水體、雪或雲等非植生區域"]],
+          ["Main Applications", ["Vegetation Monitoring", "Crop Monitoring", "Forest Monitoring", "Land Cover Analysis", "Post-fire Vegetation Recovery"]],
+          ["Related Topics", ["Landsat", "Sentinel-2", "MODIS", "NDWI", "LST"]]
+        ]
+      },
+      "ndwi": {
+        category: "Concept",
+        title: "NDWI",
+        english: "Normalized Difference Water Index",
+        summary: "NDWI 是利用多光譜資料辨識水體或水分特徵的光譜指標。不同研究可能使用不同波段組合，因此使用時需要確認所採用的定義。",
+        sections: [
+          ["Definition", "在常見的水體辨識版本中，NDWI 利用 Green 與 Near Infrared (NIR) 波段的差異來增強水體資訊。"],
+          ["Formula", "NDWI = (ρGreen − ρNIR) / (ρGreen + ρNIR)", "formula"],
+          ["Variables", ["ρGreen — Green band reflectance", "ρNIR — Near Infrared band reflectance"]],
+          ["Interpretation", ["較高值較可能與水體相關", "較低值通常較不具水體特徵", "實際判斷門檻會受到感測器、波段與研究區域影響"]],
+          ["Main Applications", ["Water Body Mapping", "Surface Water Monitoring", "Wetland Monitoring", "Flood Mapping"]],
+          ["Related Topics", ["Landsat", "Sentinel-2", "Sentinel-2 L2A", "NDVI", "QGIS"]]
+        ]
+      },
+      "lst": {
+        category: "Concept",
+        title: "LST",
+        english: "Land Surface Temperature",
+        summary: "LST 表示地球表面的溫度，是遙測與地表環境分析的重要參數，可用於都市熱島、農業、植生與火災等分析。",
+        sections: [
+          ["Definition", "Land Surface Temperature 是描述地球表面溫度的遙測參數，與氣象站量測的近地面 air temperature 不同。"],
+          ["Core Concept", "地表會以熱紅外輻射形式釋放能量，衛星上的 Thermal Infrared Sensor 可觀測相關資訊，再透過處理與校正產生 Surface Temperature。"],
+          ["Formula", "Landsat Collection 2 Level-2 的 Surface Temperature scaling：ST = DN × 0.00341802 + 149.0", "formula"],
+          ["Variables", ["ST — Surface Temperature in Kelvin", "DN — 原始產品像元值"]],
+          ["Interpretation", "LST 通常以 Kelvin 表示，可用於比較不同區域或不同時間的地表熱環境。"],
+          ["Main Applications", ["Urban Heat Island Analysis", "Agricultural Monitoring", "Vegetation Monitoring", "Wildfire Analysis", "Environmental Monitoring"]],
+          ["Related Topics", ["Landsat", "Landsat Level-2", "MODIS", "NDVI", "QGIS"]]
+        ]
+      },
+      "qgis": {
+        category: "GIS Tool",
+        title: "QGIS",
+        english: "QGIS",
+        summary: "QGIS 是一套開源 Desktop GIS 軟體，可用於地圖製作、圖層管理、空間分析、Raster / Vector 處理與資料視覺化。",
+        sections: [
+          ["Tool Type", "Desktop GIS"],
+          ["Introduction", "QGIS 是開源的 Geographic Information System (GIS) 軟體，可在 Windows、macOS 與 Linux 上使用。"],
+          ["Main Functions", ["Map Creation", "Layer Management", "Vector Editing", "Raster Processing", "Spatial Analysis", "Cartography", "Data Visualization"]],
+          ["GIS Applications", ["地圖製作", "空間資料管理", "Vector Analysis", "Raster Analysis", "Spatial Query", "Terrain Analysis"]],
+          ["Remote Sensing Applications", ["Satellite Image Visualization", "Image Clipping", "Raster Calculator", "NDVI Calculation", "NDWI Calculation", "LST Analysis", "Cloud Masking", "Classification"]],
+          ["Common Data Formats", ["GeoTIFF", "Shapefile", "GeoPackage", "Raster Data", "Vector Data", "Web Map / Web Feature Services"]],
+          ["Related Topics", ["Landsat", "Sentinel-2", "MODIS", "Landsat Level-2", "Sentinel-2 L2A", "NDVI", "NDWI", "LST"]]
+        ]
+      }
+    };
+
+    const cards = [...document.querySelectorAll(".topic-card")];
+    const detail = document.getElementById("detail");
+    const detailCategory = document.getElementById("detailCategory");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailEnglish = document.getElementById("detailEnglish");
+    const detailSummary = document.getElementById("detailSummary");
+    const detailGrid = document.getElementById("detailGrid");
+    const closeDetail = document.getElementById("closeDetail");
+    const searchInput = document.getElementById("searchInput");
+    const searchButton = document.getElementById("searchButton");
+    const noResults = document.getElementById("noResults");
+
+    function openTopic(id, scroll = true) {
+      const topic = topics[id];
+      if (!topic) return;
+
+      detailCategory.textContent = topic.category;
+      detailTitle.textContent = topic.title;
+      detailEnglish.textContent = topic.english;
+      detailSummary.textContent = topic.summary;
+      detailGrid.innerHTML = "";
+
+      topic.sections.forEach(([heading, content, type]) => {
+        const section = document.createElement("section");
+        section.className = "detail-section";
+
+        const h3 = document.createElement("h3");
+        h3.textContent = heading;
+        section.appendChild(h3);
+
+        if (type === "formula") {
+          const formula = document.createElement("div");
+          formula.className = "formula";
+          formula.textContent = content;
+          section.appendChild(formula);
+        } else if (Array.isArray(content)) {
+          const ul = document.createElement("ul");
+          content.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            ul.appendChild(li);
+          });
+          section.appendChild(ul);
+        } else {
+          const p = document.createElement("p");
+          p.textContent = content;
+          section.appendChild(p);
+        }
+
+        if (heading === "Related Topics" && Array.isArray(content)) {
+          section.innerHTML = "";
+          const h = document.createElement("h3");
+          h.textContent = heading;
+          section.appendChild(h);
+          const related = document.createElement("div");
+          related.className = "related";
+          content.forEach(name => {
+            const target = Object.entries(topics).find(([, value]) => value.title === name);
+            const button = document.createElement("button");
+            button.type = "button";
+            button.textContent = name;
+            if (target) {
+              button.addEventListener("click", () => openTopic(target[0]));
+            } else {
+              button.disabled = true;
+            }
+            related.appendChild(button);
+          });
+          section.appendChild(related);
+        }
+
+        detailGrid.appendChild(section);
+      });
+
+      detail.classList.add("active");
+      if (scroll) {
+        setTimeout(() => detail.scrollIntoView({ behavior: "smooth", block: "start" }), 20);
+      }
+    }
+
+    cards.forEach(card => {
+      card.addEventListener("click", () => openTopic(card.dataset.topic));
+    });
+
+    closeDetail.addEventListener("click", () => {
+      detail.classList.remove("active");
+    });
+
+    function searchTopics() {
+      const query = searchInput.value.trim().toLowerCase();
+      let visible = 0;
+
+      cards.forEach(card => {
+        const id = card.dataset.topic;
+        const topic = topics[id];
+        const haystack = [
+          topic.title,
+          topic.english,
+          topic.category,
+          topic.summary,
+          ...topic.sections.flatMap(([, content]) => Array.isArray(content) ? content : [content])
+        ].join(" ").toLowerCase();
+
+        const match = !query || haystack.includes(query);
+        card.style.display = match ? "" : "none";
+        if (match) visible++;
+      });
+
+      noResults.style.display = visible === 0 ? "block" : "none";
+
+      if (query && visible === 1) {
+        const first = cards.find(card => card.style.display !== "none");
+        if (first) openTopic(first.dataset.topic, false);
+      }
+    }
+
+    searchButton.addEventListener("click", searchTopics);
+    searchInput.addEventListener("input", searchTopics);
+    searchInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") searchTopics();
+    });
+  </script>
+</body>
+</html>
